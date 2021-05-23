@@ -68,7 +68,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
-                    android:text="음식 0" />
+                    android:text="음식 1" />
             </LinearLayout>
 
             <LinearLayout
