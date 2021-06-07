@@ -1,8 +1,9 @@
 package com.example.myapplication
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import com.google.zxing.integration.android.IntentIntegrator
 import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : AppCompatActivity() {
@@ -11,8 +12,7 @@ class HomeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_home)
 
         qrbutton.setOnClickListener {
-            val nextIntent = Intent(this, MainActivity::class.java)
-            startActivity(nextIntent)
+            IntentIntegrator(this).initiateScan()
         }
 
         orderhistorybutton.setOnClickListener {
