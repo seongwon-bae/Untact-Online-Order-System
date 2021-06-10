@@ -7,9 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.zxing.integration.android.IntentIntegrator
 import kotlinx.android.synthetic.main.activity_home.*
 
-
 class HomeActivity : AppCompatActivity() {
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,10 +33,14 @@ class HomeActivity : AppCompatActivity() {
                 var store_table = input.split("\'")
                 // store_table[3] = store id
                 // store_table[7] = table number
-                Toast.makeText(this, "Scanned Store id : " + store_table[3] + "Table number" + store_table[7], Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Scanned Store id : " + store_table[3] + "Table number : " + store_table[7], Toast.LENGTH_LONG).show()
+                val nextIntent = Intent(this, MainActivity::class.java)
+                startActivity(nextIntent)
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data)
         }
     }
+
 }
+
