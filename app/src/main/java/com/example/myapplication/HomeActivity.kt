@@ -33,7 +33,7 @@ class HomeActivity : AppCompatActivity() {
                 var store_table = input.split("\'")
                 // store_table[3] = store id
                 // store_table[7] = table number
-                Toast.makeText(this, "Scanned Store id : " + store_table[3], Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Scanned Store id : " + store_table[3] + "Table number" + store_table[7], Toast.LENGTH_LONG).show()
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data)
