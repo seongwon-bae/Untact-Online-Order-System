@@ -35,6 +35,8 @@ class HomeActivity : AppCompatActivity() {
                 // store_table[7] = table number
                 Toast.makeText(this, "Scanned Store id : " + store_table[3] + "Table number : " + store_table[7], Toast.LENGTH_LONG).show()
                 val nextIntent = Intent(this, MainActivity::class.java)
+                nextIntent.putExtra("store_num",store_table[3])
+                nextIntent.putExtra("table_num", store_table[7])
                 startActivity(nextIntent)
             }
         } else {
