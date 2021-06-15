@@ -30,6 +30,15 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="이거슨 음식에 대한 설명" />
+        <TextView
+            android:id="@+id/price"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:text="음식 가격" />
     </LinearLayout>
 
 </LinearLayout>

@@ -17,6 +17,7 @@ class FoodAdapter(): RecyclerView.Adapter<FoodAdapter.MainViewHolder>() {
             view.food_name.text = food.food_name
             Glide.with(view.food_imgView).load(food.food_img).into(view.food_imgView)
             view.food_description.text = food.food_description
+            view.price.text = food.price
             view.setOnClickListener(listener)
         }
     }
