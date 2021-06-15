@@ -35,10 +35,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        var store_num = intent.getStringExtra("store_num").toString()
         val food_adapter = FoodAdapter()
-
-        val callFood = ApiObject.retrofitFoodService.getFoodInfo("67KE6rGw7YK5")
+        val callFood = ApiObject.retrofitFoodService.getFoodInfo(store_num = store_num)
         callFood.enqueue(object : Callback<JsonArray> {
             override fun onResponse(call: Call<JsonArray>, response: Response<JsonArray>){
                 if(response.isSuccessful){
