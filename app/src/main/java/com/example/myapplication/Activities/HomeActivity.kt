@@ -1,9 +1,10 @@
-package com.example.myapplication
+package com.example.myapplication.Activities
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.myapplication.R
 import com.google.zxing.integration.android.IntentIntegrator
 import kotlinx.android.synthetic.main.activity_home.*
 
@@ -14,7 +15,9 @@ class HomeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_home)
 
         qrbutton.setOnClickListener {
-            IntentIntegrator(this).initiateScan()
+            val nextIntent = Intent(this, MainActivity::class.java)
+            startActivity(nextIntent)
+            //IntentIntegrator(this).initiateScan()
         }
 
         orderhistorybutton.setOnClickListener {

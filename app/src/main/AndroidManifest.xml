@@ -21,8 +21,8 @@
         <activity android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="fullSensor"
             tools:replace="screenOrientation"/>
-        <activity android:name=".OrderHistoryActivity" />
-        <activity android:name=".HomeActivity"
+        <activity android:name=".Activities.OrderHistoryActivity" />
+        <activity android:name=".Activities.HomeActivity"
                 android:screenOrientation="portrait"
                 android:stateNotNeeded="true"
                 android:windowSoftInputMode="stateAlwaysHidden">
@@ -33,8 +33,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".OrderCheckActivity" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".Activities.OrderCheckActivity" />
+        <activity android:name=".Activities.MainActivity" />
     </application>
 
 </manifest>

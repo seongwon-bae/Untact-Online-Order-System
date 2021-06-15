@@ -1,10 +1,16 @@
-package com.example.myapplication
+package com.example.myapplication.Activities
 
 import android.content.Intent
 import kotlinx.android.synthetic.main.activity_main.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.myapplication.Retrofit.FoodData
+import com.example.myapplication.Retrofit.FoodInterface
+import com.example.myapplication.R
+import com.example.myapplication.RecyclerView.FoodAdapter
+import com.example.myapplication.RecyclerView.FoodSelectData
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray
 import org.json.JSONArray
@@ -15,7 +21,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 private val retrofit = Retrofit.Builder()
-    .baseUrl("http://3.34.192.199/")
+    .baseUrl("http://52.78.231.192/")
     .addConverterFactory(GsonConverterFactory.create())
     .build()
 object ApiObject {
@@ -30,25 +36,37 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val callFood = ApiObject.retrofitFoodService.getFoodInfo(2)
+        val food_adapter = FoodAdapter()
+
+        val callFood = ApiObject.retrofitFoodService.getFoodInfo("67KE6rGw7YK5")
         callFood.enqueue(object : Callback<JsonArray> {
             override fun onResponse(call: Call<JsonArray>, response: Response<JsonArray>){
                 if(response.isSuccessful){
                     val gson = GsonBuilder().create()
                     val jsonArray =JSONArray(response.body().toString())
+                    var foodlist = ArrayList<FoodSelectData>()
                     for(i in 0 until jsonArray.length()){
                         val food = gson.fromJson(jsonArray.getJSONObject(i).toString(), FoodData::class.java)
-                        println("api (${i}) response food_name : ${food.food_name!!.toString()}")
-                        println("api (${i}) response food_img : ${food.food_img!!.toString()}")
-                        println("api (${i}) response price : ${food.price!!.toString()}")
-                        println("api (${i}) response food_description : ${food.food_description!!.toString()}")
+//                        println("api (${i}) response food_name : ${food.food_name!!.toString()}")
+//                        println("api (${i}) response food_img : ${food.food_img!!.toString()}")
+//                        println("api (${i}) response price : ${food.price!!.toString()}")
+//                        println("api (${i}) response food_description : ${food.food_description!!.toString()}")
+                        foodlist.add(FoodSelectData(food.food_name, food.food_img, food.food_description))
                     }
+                    for(i in foodlist){
+                        println(i.food_name)
+                    }
+                    food_adapter.setItems(foodlist)
                 }
             }
             override fun onFailure(call: Call<JsonArray>, t: Throwable) {
                 t.message?.let { Log.d("api fail : ", it) }
             }
         })
+        val layoutManager = LinearLayoutManager(this)
+        recyclerview.layoutManager = layoutManager
+        recyclerview.adapter = food_adapter
+
         button.setOnClickListener {
             val nextIntent = Intent(this, OrderCheckActivity::class.java)
             startActivity(nextIntent)
