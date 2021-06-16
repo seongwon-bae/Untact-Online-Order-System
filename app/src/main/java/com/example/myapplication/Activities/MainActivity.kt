@@ -56,6 +56,9 @@ class MainActivity : AppCompatActivity() {
                         foodlist.add(FoodSelectData(food.food_name, food.food_img, food.food_description, food.price, food.category_num))
                         category_nums.add(food.category_num)
                     }
+                    for(i in foodlist){
+                        println(i.food_name)
+                    }
                     food_adapter.setItems(foodlist)
                 }
             }

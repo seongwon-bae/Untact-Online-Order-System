@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center">
+    android:gravity="center"
+    android:background="@drawable/backgroundimagei">
+
 
     <LinearLayout
         android:id="@+id/button1"
@@ -20,7 +23,7 @@
             android:layout_width="169dp"
             android:layout_height="168dp"
             android:layout_gravity="center"
-            android:background="@drawable/camera"
+            android:background="@drawable/qr"
             android:maxWidth="1000dp"
             android:maxHeight="1000dp"
             android:padding="8dp" />
@@ -32,31 +35,31 @@
 
     </LinearLayout>
 
+
     <LinearLayout
         android:id="@+id/button2"
-        android:orientation="vertical"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_marginLeft="24dp"
         android:background="?selectableItemBackgroundBorderless"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="vertical">
 
         <ImageButton
             android:id="@+id/orderhistorybutton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="162dp"
+            android:layout_height="150dp"
             android:layout_gravity="center"
-            android:padding="8dp"
-            android:scaleType="fitXY"
+            android:background="@drawable/rec"
             android:maxWidth="1000dp"
             android:maxHeight="1000dp"
-            android:background="@drawable/receipt"
-            />
+            android:padding="8dp"
+            android:scaleType="fitXY" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="주문 내역"/>
+            android:text="주문 내역" />
 
     </LinearLayout>
 </LinearLayout>
