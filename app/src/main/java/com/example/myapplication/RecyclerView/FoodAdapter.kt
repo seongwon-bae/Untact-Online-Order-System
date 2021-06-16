@@ -1,16 +1,21 @@
 package com.example.myapplication.RecyclerView
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.myapplication.Activities.MainActivity
 import com.example.myapplication.R
 import kotlinx.android.synthetic.main.foodview.view.*
+import android.content.*
+
 
 class FoodAdapter(): RecyclerView.Adapter<FoodAdapter.MainViewHolder>() {
     private val foods = ArrayList<FoodSelectData>()
+
     class MainViewHolder(v: View): RecyclerView.ViewHolder(v){
         private var view: View = v
         fun bind(listener: View.OnClickListener, food:FoodSelectData){
@@ -32,6 +37,7 @@ class FoodAdapter(): RecyclerView.Adapter<FoodAdapter.MainViewHolder>() {
         val listener = View.OnClickListener { it->
             Toast.makeText(it.context, "클릭한 아이템의 이름 : ${item.food_name}", Toast.LENGTH_SHORT).show()
         }
+
         holder.apply{
             bind(listener, item)
             itemView.tag = item

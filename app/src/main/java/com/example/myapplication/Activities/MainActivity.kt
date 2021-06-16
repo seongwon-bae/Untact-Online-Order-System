@@ -46,7 +46,11 @@ class MainActivity : AppCompatActivity() {
                     var foodlist = ArrayList<FoodSelectData>()
                     for(i in 0 until jsonArray.length()){
                         val food = gson.fromJson(jsonArray.getJSONObject(i).toString(), FoodData::class.java)
+
                         foodlist.add(FoodSelectData(food.food_name, food.food_img, food.food_description, food.price))
+                    }
+                    for(i in foodlist){
+                        println(i.food_name)
                     }
                     food_adapter.setItems(foodlist)
                 }
