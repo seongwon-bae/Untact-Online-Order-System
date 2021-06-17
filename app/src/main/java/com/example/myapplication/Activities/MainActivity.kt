@@ -5,6 +5,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentManager
 import com.example.myapplication.Fragments.FoodFragment
 import com.example.myapplication.Retrofit.FoodData
@@ -97,8 +99,21 @@ class MainActivity : AppCompatActivity() {
 
 
         button.setOnClickListener {
-            val nextIntent = Intent(this, OrderCheckActivity::class.java)
-            startActivity(nextIntent)
+            val items = arrayOf("선결제", "후결제", "현금", "카드")
+            var selectedItem: String? = null
+            val builder = AlertDialog.Builder(this)
+                .setTitle("결제 방법을 선택해주세요")
+                .setSingleChoiceItems(items, -1) { dialog, which ->
+                    selectedItem = items[which]
+                }
+                .setPositiveButton("OK") { dialog, which ->
+                    Toast.makeText(this,"${selectedItem.toString()} is Selected" ,Toast.LENGTH_LONG).show()
+                    val nextIntent = Intent(this, OrderCheckActivity::class.java)
+                    nextIntent.putExtra("payment", selectedItem)
+                    startActivity(nextIntent)
+                }
+                .show()
+
         }
     }
 
