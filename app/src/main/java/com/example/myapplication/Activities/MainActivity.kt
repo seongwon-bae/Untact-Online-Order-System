@@ -99,7 +99,7 @@ class MainActivity : AppCompatActivity() {
 
 
         button.setOnClickListener {
-            val items = arrayOf("선결제", "후결제", "현금", "카드")
+            val items = arrayOf("선결제", "후결제(현금)", "후결제(카드)")
             var selectedItem: String? = null
             val builder = AlertDialog.Builder(this)
                 .setTitle("결제 방법을 선택해주세요")
