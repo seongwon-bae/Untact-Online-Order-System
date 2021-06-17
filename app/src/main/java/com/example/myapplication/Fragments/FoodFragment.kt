@@ -7,15 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
+import com.example.myapplication.Activities.MainActivity
 import com.example.myapplication.R
 import com.example.myapplication.RecyclerView.FoodAdapter
 import com.example.myapplication.RecyclerView.FoodSelectData
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_food.*
 
-class FoodFragment(var foodadapter : FoodAdapter) : Fragment() {
-    var foodData = ArrayList<FoodSelectData>()
+class FoodFragment(val position : Int) : Fragment() {
 
+    private lateinit var foodadapter : FoodAdapter
+    private lateinit var viewPager : ViewPager2
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -25,13 +26,17 @@ class FoodFragment(var foodadapter : FoodAdapter) : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        foodadapter = FoodAdapter()
         val layoutManager = LinearLayoutManager(context)
         recyclerview.layoutManager = layoutManager
         recyclerview.adapter = this.foodadapter
+        refreshAdapter()
     }
 
     fun refreshAdapter(){
-        this.foodadapter?.setItems(foodData)
-        this.foodadapter?.notifyDataSetChanged()
+        (activity as? MainActivity)?.let{
+            val items = it.getFragItem(position) ?: return
+            this.foodadapter?.setItems(items)
+        }
     }
 }

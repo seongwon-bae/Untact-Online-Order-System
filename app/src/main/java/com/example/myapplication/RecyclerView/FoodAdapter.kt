@@ -11,6 +11,7 @@ import com.example.myapplication.Activities.MainActivity
 import com.example.myapplication.R
 import kotlinx.android.synthetic.main.foodview.view.*
 import android.content.*
+import com.example.myapplication.Retrofit.FoodData
 
 
 class FoodAdapter(): RecyclerView.Adapter<FoodAdapter.MainViewHolder>() {

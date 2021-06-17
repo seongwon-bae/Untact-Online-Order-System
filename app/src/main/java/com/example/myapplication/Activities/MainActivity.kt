@@ -6,18 +6,17 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.Fragments.FoodFragment
 import com.example.myapplication.Retrofit.FoodData
-import com.example.myapplication.Retrofit.FoodInterface
 import com.example.myapplication.R
 import com.example.myapplication.RecyclerView.FoodAdapter
-import com.example.myapplication.RecyclerView.FoodPageAdapter
+import com.example.myapplication.Fragments.FoodPageAdapter
 import com.example.myapplication.RecyclerView.FoodSelectData
+import com.example.myapplication.Retrofit.CategoryData
+import com.example.myapplication.Retrofit.RetrofitInterface
+import com.google.android.material.tabs.TabLayout
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray
-import kotlinx.android.synthetic.main.fragment_food.*
 import org.json.JSONArray
 import retrofit2.Call
 import retrofit2.Callback
@@ -30,36 +29,65 @@ private val retrofit = Retrofit.Builder()
     .addConverterFactory(GsonConverterFactory.create())
     .build()
 object ApiObject {
-    val retrofitFoodService: FoodInterface by lazy {
-        retrofit.create(FoodInterface::class.java)
+    val retrofitService: RetrofitInterface by lazy {
+        retrofit.create(RetrofitInterface::class.java)
     }
 }
 
 class MainActivity : AppCompatActivity() {
 
+    val food_adapter = FoodAdapter()
+    val foodPageAdapter = FoodPageAdapter(this, food_adapter)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val store_num = intent.getStringExtra("store_num").toString()
-        val food_adapter = FoodAdapter()
-        val callFood = ApiObject.retrofitFoodService.getFoodInfo(store_num = store_num)
-        var category_nums = mutableSetOf<Int>()
+        val callFood = ApiObject.retrofitService.getFoodInfo(store_num = store_num)
+        val category_nums = mutableSetOf<Int>()
 
         callFood.enqueue(object : Callback<JsonArray> {
             override fun onResponse(call: Call<JsonArray>, response: Response<JsonArray>){
                 if(response.isSuccessful){
-                    val gson = GsonBuilder().create()
-                    val jsonArray =JSONArray(response.body().toString())
-                    var foodlist = ArrayList<FoodSelectData>()
+                    var gson = GsonBuilder().create()
+                    var jsonArray =JSONArray(response.body().toString())
+                    var allFoodList = ArrayList<FoodSelectData>()
                     for(i in 0 until jsonArray.length()){
                         val food = gson.fromJson(jsonArray.getJSONObject(i).toString(), FoodData::class.java)
-                        foodlist.add(FoodSelectData(food.food_name, food.food_img, food.food_description, food.price, food.category_num))
+                        allFoodList.add(FoodSelectData(food.food_name, food.food_img, food.price, food.food_description, food.status, food.category_num))
                         category_nums.add(food.category_num)
                     }
-                    for(i in foodlist){
-                        println(i.food_name)
+                    food_adapter.setItems(allFoodList)
+                    foodPageAdapter.fragList = category_nums.size
+                    category_nums.forEachIndexed{ index, value ->
+                        val distributedFoodList = ArrayList<FoodSelectData>()
+                        for(j in allFoodList){
+                            if(value==j.category_num){
+                                distributedFoodList.add(j)
+                            }
+                        }
+                        foodPageAdapter.foodMap.put(index, distributedFoodList)
                     }
-                    food_adapter.setItems(foodlist)
+                    pager.adapter = foodPageAdapter
+                    val callCategory = ApiObject.retrofitService.getCategoryName()
+                    callCategory.enqueue(object: Callback<JsonArray> {
+                        override fun onResponse(call: Call<JsonArray>, response: Response<JsonArray>) {
+                            if(response.isSuccessful){
+                                gson = GsonBuilder().create()
+                                jsonArray =JSONArray(response.body().toString())
+                                val categoryList = ArrayList<CategoryData>()
+                                for(i in 0 until jsonArray.length()){
+                                    val category = gson.fromJson(jsonArray.getJSONObject(i).toString(), CategoryData::class.java)
+                                    categoryList.add(CategoryData(category.category_num, category.store_num, category.category_name))
+                                }
+                                makeTab(allFoodList, categoryList)
+                            }
+                        }
+
+                        override fun onFailure(call: Call<JsonArray>, t: Throwable) {
+                            TODO("Not yet implemented")
+                        }
+                    })
                 }
             }
             override fun onFailure(call: Call<JsonArray>, t: Throwable) {
@@ -67,22 +95,47 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        pager.adapter = FoodPageAdapter(this)
 
-        for(i in category_nums){
-            displayFragment(food_adapter)
-        }
         button.setOnClickListener {
             val nextIntent = Intent(this, OrderCheckActivity::class.java)
             startActivity(nextIntent)
         }
     }
 
-    fun displayFragment(adapter : FoodAdapter) {
-        val foodFragment = FoodFragment(adapter)
+    fun makeTab(foodList : ArrayList<FoodSelectData>, categories : ArrayList<CategoryData>){
+        tab.removeAllTabs()
+        connectViewPager()
+        for(i in categories){
+            println("===========================카테고리의 번호 : ${i.category_num}")
+            for(j in foodList){
+                if(i.category_num == j.category_num){
+                    println("===========================음식들의 카테고리 번호 : ${j.food_name}, ${j.category_num}")
+                    tab.addTab(tab.newTab().setText(i.category_name))
+                    break
+                }
+            }
+        }
+    }
+    fun connectViewPager(){
+        tab.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener{
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+            }
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+            }
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                val position = tab?.position ?: return
+                pager.setCurrentItem(position)
+            }
+        })
+    }
+    fun displayFragment(adapter : FoodAdapter, foodList: ArrayList<FoodSelectData>) {
+        val foodFragment = FoodFragment(0)
         val fragmentManager : FragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.add(R.id.fragment_container, foodFragment).addToBackStack(null).commit()
         foodFragment.refreshAdapter()
+    }
+    fun getFragItem(position: Int) : ArrayList<FoodSelectData>? {
+        return foodPageAdapter.foodMap[position]
     }
 }
