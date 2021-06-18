@@ -18,9 +18,9 @@ class HomeActivity : AppCompatActivity() {
 
         qrbutton.setOnClickListener {
             val nextIntent = Intent(this, MainActivity::class.java)
-            nextIntent.putExtra("store_num","7ZmN7L2p67CY7KCQ")
+            nextIntent.putExtra("store_num","67KE6rGw7YK5")
             startActivity(nextIntent)
-//            IntentIntegrator(this).initiateScan()
+            IntentIntegrator(this).initiateScan()
         }
 
         orderhistorybutton.setOnClickListener {
