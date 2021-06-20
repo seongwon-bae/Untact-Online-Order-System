@@ -11,11 +11,15 @@ import com.example.myapplication.Activities.MainActivity
 import com.example.myapplication.R
 import kotlinx.android.synthetic.main.foodview.view.*
 import android.content.*
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.myapplication.Fragments.FoodFragment
 import com.example.myapplication.Retrofit.FoodData
+import kotlinx.android.synthetic.main.activity_main.*
 
 
-class FoodAdapter(): RecyclerView.Adapter<FoodAdapter.MainViewHolder>() {
+class FoodAdapter(private val listener : FoodFragment.OnMenuSendListener?): RecyclerView.Adapter<FoodAdapter.MainViewHolder>() {
     private val foods = ArrayList<FoodSelectData>()
+
 
     class MainViewHolder(v: View): RecyclerView.ViewHolder(v){
         private var view: View = v
@@ -36,7 +40,15 @@ class FoodAdapter(): RecyclerView.Adapter<FoodAdapter.MainViewHolder>() {
     override fun onBindViewHolder(holder: FoodAdapter.MainViewHolder, position: Int) {
         val item = foods[position]
         val listener = View.OnClickListener { it->
+
             Toast.makeText(it.context, "클릭한 아이템의 이름 : ${item.food_name}", Toast.LENGTH_SHORT).show()
+            println("FoodAdapter : Toast 메세지 리스너로 들어왔음.")
+            println(listener)
+            val menu_name = item.food_name
+            val menu_price = item.price
+            val menu_amount = 1
+            val menu_img = item.food_img
+            listener?.OnMenuSend(SelectedFoodData(menu_name, menu_price, menu_amount, menu_img))
         }
 
         holder.apply{

@@ -6,7 +6,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.myapplication.RecyclerView.FoodAdapter
 import com.example.myapplication.RecyclerView.FoodSelectData
 
-class FoodPageAdapter(activity : FragmentActivity, val foodAdapter: FoodAdapter) : FragmentStateAdapter(activity) {
+class FoodPageAdapter(activity : FragmentActivity) : FragmentStateAdapter(activity) {
     val foodMap = mutableMapOf<Int,ArrayList<FoodSelectData>>()
     var fragList = 0
     val foodList = ArrayList<FoodFragment>()

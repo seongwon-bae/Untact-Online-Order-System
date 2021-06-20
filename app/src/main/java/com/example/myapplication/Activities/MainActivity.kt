@@ -7,18 +7,22 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.FragmentManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.Fragments.FoodFragment
 import com.example.myapplication.Retrofit.FoodData
 import com.example.myapplication.R
 import com.example.myapplication.RecyclerView.FoodAdapter
 import com.example.myapplication.Fragments.FoodPageAdapter
 import com.example.myapplication.RecyclerView.FoodSelectData
+import com.example.myapplication.RecyclerView.MenuSelectAdapter
+import com.example.myapplication.RecyclerView.SelectedFoodData
 import com.example.myapplication.Retrofit.CategoryData
 import com.example.myapplication.Retrofit.RetrofitInterface
 import com.google.android.material.tabs.TabLayout
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray
+import kotlinx.android.synthetic.main.fragment_food.*
 import org.json.JSONArray
 import retrofit2.Call
 import retrofit2.Callback
@@ -36,10 +40,24 @@ object ApiObject {
     }
 }
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), FoodFragment.OnMenuSendListener{
 
-    val food_adapter = FoodAdapter()
-    val foodPageAdapter = FoodPageAdapter(this, food_adapter)
+    val selectMenuList = ArrayList<SelectedFoodData>()
+    override fun OnMenuSend(selectedMenu: SelectedFoodData) {
+        selectMenuList.add(selectedMenu)
+        menuSelectAdapter.setItems(selectMenuList)
+        menuSelectAdapter.notifyDataSetChanged()
+    }
+
+//    override fun OnMenuOrder(selectMenus: SelectedFoodData) {
+//
+//    }
+
+    val food_adapter = FoodAdapter(null)
+    val foodPageAdapter = FoodPageAdapter(this)
+    val menuSelectAdapter = MenuSelectAdapter()
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +65,8 @@ class MainActivity : AppCompatActivity() {
         val store_num = intent.getStringExtra("store_num").toString()
         val callFood = ApiObject.retrofitService.getFoodInfo(store_num = store_num)
         val category_nums = mutableSetOf<Int>()
+
+        menu_recyclerview.adapter = menuSelectAdapter
 
         callFood.enqueue(object : Callback<JsonArray> {
             override fun onResponse(call: Call<JsonArray>, response: Response<JsonArray>){
@@ -97,7 +117,6 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-
         button.setOnClickListener {
             val items = arrayOf("선결제", "후결제(현금)", "후결제(카드)")
             var selectedItem: String? = null
@@ -121,10 +140,8 @@ class MainActivity : AppCompatActivity() {
         tab.removeAllTabs()
         connectViewPager()
         for(i in categories){
-            println("===========================카테고리의 번호 : ${i.category_num}")
             for(j in foodList){
                 if(i.category_num == j.category_num){
-                    println("===========================음식들의 카테고리 번호 : ${j.food_name}, ${j.category_num}")
                     tab.addTab(tab.newTab().setText(i.category_name))
                     break
                 }
@@ -143,14 +160,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
     }
-    fun displayFragment(adapter : FoodAdapter, foodList: ArrayList<FoodSelectData>) {
-        val foodFragment = FoodFragment(0)
-        val fragmentManager : FragmentManager = supportFragmentManager
-        val fragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.add(R.id.fragment_container, foodFragment).addToBackStack(null).commit()
-        foodFragment.refreshAdapter()
-    }
-    fun getFragItem(position: Int) : ArrayList<FoodSelectData>? {
+    fun getFoodFragItem(position: Int) : ArrayList<FoodSelectData>? {
         return foodPageAdapter.foodMap[position]
     }
 }
