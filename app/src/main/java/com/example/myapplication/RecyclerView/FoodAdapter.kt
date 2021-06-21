@@ -27,7 +27,7 @@ class FoodAdapter(private val listener : FoodFragment.OnMenuSendListener?): Recy
             view.food_name.text = food.food_name
             Glide.with(view.food_imgView).load(food.food_img).into(view.food_imgView)
             view.food_description.text = food.food_description
-            view.price.text = food.price
+            view.price.text = "${food.price}"
             view.setOnClickListener(listener)
         }
     }
@@ -40,10 +40,8 @@ class FoodAdapter(private val listener : FoodFragment.OnMenuSendListener?): Recy
     override fun onBindViewHolder(holder: FoodAdapter.MainViewHolder, position: Int) {
         val item = foods[position]
         val listener = View.OnClickListener { it->
-
             Toast.makeText(it.context, "클릭한 아이템의 이름 : ${item.food_name}", Toast.LENGTH_SHORT).show()
             println("FoodAdapter : Toast 메세지 리스너로 들어왔음.")
-            println(listener)
             val menu_name = item.food_name
             val menu_price = item.price
             val menu_amount = 1

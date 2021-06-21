@@ -4,6 +4,7 @@ import android.content.Intent
 import kotlinx.android.synthetic.main.activity_main.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -19,6 +20,7 @@ import com.example.myapplication.RecyclerView.MenuSelectAdapter
 import com.example.myapplication.RecyclerView.SelectedFoodData
 import com.example.myapplication.Retrofit.CategoryData
 import com.example.myapplication.Retrofit.RetrofitInterface
+import com.example.myapplication.etc.DeviceInfo
 import com.google.android.material.tabs.TabLayout
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray
@@ -43,10 +45,13 @@ object ApiObject {
 class MainActivity : AppCompatActivity(), FoodFragment.OnMenuSendListener{
 
     val selectMenuList = ArrayList<SelectedFoodData>()
+    var allPrice = 0
     override fun OnMenuSend(selectedMenu: SelectedFoodData) {
         selectMenuList.add(selectedMenu)
         menuSelectAdapter.setItems(selectMenuList)
         menuSelectAdapter.notifyDataSetChanged()
+        allPrice = menuSelectAdapter.setPrice()
+        all_price.text = "${allPrice}"
     }
 
 //    override fun OnMenuOrder(selectMenus: SelectedFoodData) {
@@ -56,8 +61,6 @@ class MainActivity : AppCompatActivity(), FoodFragment.OnMenuSendListener{
     val food_adapter = FoodAdapter(null)
     val foodPageAdapter = FoodPageAdapter(this)
     val menuSelectAdapter = MenuSelectAdapter()
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -120,6 +123,7 @@ class MainActivity : AppCompatActivity(), FoodFragment.OnMenuSendListener{
         button.setOnClickListener {
             val items = arrayOf("선결제", "후결제(현금)", "후결제(카드)")
             var selectedItem: String? = null
+            val nextIntent = Intent(this, OrderCheckActivity::class.java)
             val builder = AlertDialog.Builder(this)
                 .setTitle("결제 방법을 선택해주세요")
                 .setSingleChoiceItems(items, -1) { dialog, which ->
@@ -127,12 +131,13 @@ class MainActivity : AppCompatActivity(), FoodFragment.OnMenuSendListener{
                 }
                 .setPositiveButton("OK") { dialog, which ->
                     Toast.makeText(this,"${selectedItem.toString()} is Selected" ,Toast.LENGTH_LONG).show()
-                    val nextIntent = Intent(this, OrderCheckActivity::class.java)
                     nextIntent.putExtra("payment", selectedItem)
+                    nextIntent.putExtra("menus", selectMenuList)
+                    var requestEdit = requestText.text.toString()
+                    nextIntent.putExtra("request", requestEdit)
                     startActivity(nextIntent)
                 }
                 .show()
-
         }
     }
 
